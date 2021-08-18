@@ -1,0 +1,145 @@
+package ADT;
+
+public class SortedDoublyLinkedList <T extends Comparable <T>> implements SortedListInterface<T>{
+    private boolean binary = false;
+    private boolean result = false;
+    private Node firstNode, currentNode;
+    private int noOfEntries =0;
+    
+    @Override
+    public boolean add(T anEntry) {
+    Node newNode = new Node(anEntry);
+    Node beforeNode = null;
+    currentNode = firstNode;
+    while (currentNode != null && anEntry.compareTo(currentNode.data) > 0 ) {
+      beforeNode = currentNode;
+      currentNode = currentNode.next;
+      currentNode.prev = beforeNode;
+      beforeNode.next = currentNode;
+      }
+    //If add infront
+    if (isEmpty() || (beforeNode == null)) { 
+      newNode.next = firstNode;
+      newNode.prev = firstNode;
+      firstNode = newNode;
+    } 
+    else{
+        if(contains(anEntry)){
+            System.out.print("Got RepeaAT1");
+        }
+        newNode.next = currentNode;
+        beforeNode.next = newNode; 
+    }
+    noOfEntries++;     
+    return true;
+  }
+    
+
+    @Override
+    public boolean remove (T anEntry){
+        return true;
+    }
+    @Override
+    public void clear(){
+        firstNode = null;
+        noOfEntries = 0;
+    }
+    
+    @Override
+    public boolean contains(T anEntry){
+        binary = false;
+        currentNode = firstNode;
+        do{
+          if(currentNode == null){
+             binary = false;
+         }
+          else if (anEntry.compareTo(currentNode.data) != 0) {
+             currentNode.prev = currentNode;
+             currentNode = currentNode.next;
+             binary = false;
+         }
+          else if (anEntry.compareTo(currentNode.data)==0) {
+              binary = true;
+          }
+        }while(binary != true && currentNode.next !=null);
+        return binary;
+    }
+    
+    @Override
+    public int getNumberOfEntries(){
+        return noOfEntries;
+    }
+
+    @Override
+    public boolean isEmpty(){
+     binary = false;
+     binary = (noOfEntries == 0);
+    return binary;
+    }
+    
+    @Override
+    public boolean replace (T anEntry){
+        return true;
+    }
+    
+    @Override
+    public void retrieve (T anEntry){
+        currentNode = firstNode;
+        boolean found = false;
+        while (currentNode.next != null && found == false){
+            if(anEntry.compareTo(currentNode.data) != 0){
+                currentNode.prev = currentNode;
+                currentNode = currentNode.next;
+            }
+            else{
+                System.out.println("Found!"+currentNode.data);
+                break;
+            }
+        }
+    }
+    @Override
+    public void generateReports(){
+        
+    }
+
+    @Override
+    public String toString() {
+        currentNode = firstNode;
+        while(currentNode != null){
+            System.out.println(currentNode.data);
+            currentNode.prev = currentNode;
+            currentNode = currentNode.next;
+        }
+        return "SortedDoublyLinkedList{" + "noOfEntries=" + noOfEntries + '}';
+    }
+    
+
+    private class Node { //Inner class for doubly linked list
+    private T data;
+    private Node next;
+    private Node prev;
+    
+        Node(){
+          next = null;
+          prev = null;
+        }
+    
+        Node(T data){
+          this.data = data;
+          this.next = null;
+          this.next = null;
+        }
+    
+        Node(T data, Node next){
+          this.data = data;
+          this.next = next;
+          this.prev = null;
+        }
+        Node(T data, Node next, Node prev){
+          this.data = data;
+          this.next = next;
+          this.prev = prev;
+        }
+
+    }
+}
