@@ -19,11 +19,17 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
             currentNode = firstNode;
             if(newNode.data.compareTo(currentNode.data) >0){
             while(currentNode.next !=null && currentNode.prev != null){
-            currentNode.prev = currentNode;
-            currentNode = currentNode.next;
+                currentNode.prev = currentNode;
+                currentNode = currentNode.next;  
+            if (newNode.data.compareTo(currentNode.data)<0){
+                currentNode.prev = newNode;
+                newNode.next = currentNode;
+                currentNode = newNode;
+                 }
              }
             currentNode.prev = currentNode;
             currentNode.next = newNode;
+            noOfEntries++;
             result = true;
             }
             else {
