@@ -3,36 +3,29 @@ package ADT;
 public class SortedDoublyLinkedList <T extends Comparable <T>> implements SortedListInterface<T>{
     private boolean binary = false;
     private boolean result = false;
-    private Node firstNode, currentNode;
+    private Node firstNode, currentNode, tempNode;
     private int noOfEntries =0;
     
     @Override
-    public boolean add(T anEntry) {
-    Node newNode = new Node(anEntry);
-    Node beforeNode = null;
+    public boolean add (T anEntry){
+        Node newNode = new Node(anEntry);
     currentNode = firstNode;
-    while (currentNode != null && anEntry.compareTo(currentNode.data) > 0 ) {
-      beforeNode = currentNode;
+    while (currentNode != null && anEntry.compareTo(currentNode.data) > 0) {
+      tempNode = currentNode;
       currentNode = currentNode.next;
-      currentNode.prev = beforeNode;
-      beforeNode.next = currentNode;
-      }
-    //If add infront
-    if (isEmpty() || (beforeNode == null)) { 
-      newNode.next = firstNode;
-      newNode.prev = firstNode;
-      firstNode = newNode;
-    } 
-    else{
-        if(contains(anEntry)){
-            System.out.print("Got RepeaAT1");
-        }
-        newNode.next = currentNode;
-        beforeNode.next = newNode; 
     }
-    noOfEntries++;     
-    return true;
-  }
+
+    if (isEmpty() || (tempNode == null)) { // CASE 1: add at beginning
+      newNode.next = firstNode;
+      firstNode = newNode;
+    } else {	// CASE 2: add in the middle or at the end, i.e. after nodeBefore
+      newNode.next = currentNode;
+      tempNode.next = newNode;
+    }
+    noOfEntries++;
+    result = true;
+    return result;
+    }
     
 
     @Override
@@ -41,8 +34,6 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
     }
     @Override
     public void clear(){
-        firstNode = null;
-        noOfEntries = 0;
     }
     
     @Override
@@ -61,7 +52,7 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
           else if (anEntry.compareTo(currentNode.data)==0) {
               binary = true;
           }
-        }while(binary != true && currentNode.next !=null);
+        }while(binary != true && currentNode !=null);
         return binary;
     }
     
@@ -84,17 +75,11 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
     
     @Override
     public void retrieve (T anEntry){
-        currentNode = firstNode;
-        boolean found = false;
-        while (currentNode.next != null && found == false){
-            if(anEntry.compareTo(currentNode.data) != 0){
-                currentNode.prev = currentNode;
-                currentNode = currentNode.next;
-            }
-            else{
-                System.out.println("Found!"+currentNode.data);
-                break;
-            }
+        if(contains(anEntry)){
+            System.out.println(anEntry);
+        }
+        else {
+            System.out.println("Does not exists");
         }
     }
     @Override
