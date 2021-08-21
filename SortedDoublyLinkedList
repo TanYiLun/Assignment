@@ -15,7 +15,7 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
       currentNode = currentNode.next;
     }
     while(currentNode != null && newNode.data.compareTo(currentNode.data)==0){
-      remove(currentNode.data);
+      removeDuplicates(newNode.data);
       System.out.println(noOfDuplicates);
       noOfDuplicates++;
     }
@@ -69,33 +69,40 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
             else{
                 tempNode = currentNode;
                 noOfEntries --;
-                return true;
+                result = true;
             }
         }
-        result = false;
         } 
     return result;
     }
     
     @Override
-    public boolean removeDuplicates (){
-        /*Another reference to head*/
+    public boolean removeDuplicates (T anEntry){
+    Node duplicate = new Node(anEntry);
+    result = false;
+    if(isEmpty()){
+        result = false; 
+    }else{ 
+        tempNode = null;
         currentNode = firstNode;
- 
-        /* Traverse list till the last node */
-        while (currentNode != null) {
-             Node temp = currentNode;
-            /*Compare current node with the next node and
-            keep on deleting them until it matches the current
-            node data */
-            while(temp!=null && temp.data==currentNode.data) {
-                temp = temp.next;
-            }
-            /*Set current node next to the next different
-            element denoted by temp*/
-            currentNode.next = temp;
+        
+        //search
+        while(currentNode !=  null &&  currentNode.data.compareTo(anEntry)<0){
+            tempNode = currentNode;
             currentNode = currentNode.next;
+            
         }
+        if (currentNode != null && currentNode.data.compareTo(duplicate.data)==0){
+            if(duplicate.data.compareTo(firstNode.data)==0){
+                firstNode = firstNode.next;
+            }
+            if(currentNode.data.compareTo(duplicate.data)==0){
+                currentNode = currentNode.next;
+                result = true;
+                noOfEntries--;
+            }
+        }
+        } 
     return result;
     }
     
