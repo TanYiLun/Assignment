@@ -3,41 +3,87 @@ package ADT;
 public class SortedDoublyLinkedList <T extends Comparable <T>> implements SortedListInterface<T>{
     private boolean binary = false;
     private boolean result = false;
-    private Node firstNode, currentNode, tempNode;
+    private Node firstNode, currentNode, tempNode, duplicateNode;
     private int noOfEntries =0;
     
     @Override
     public boolean add (T anEntry){
-        Node newNode = new Node(anEntry);
-        if (isEmpty()){ 
-            firstNode = newNode;
-            firstNode.prev = null;
-            firstNode.next = null;
-            result = true;
-            noOfEntries++;
-        }else if (!isEmpty() && !contains(anEntry)){
-            currentNode = firstNode;
-            while(currentNode.next !=null && currentNode.prev != null){
-            currentNode.prev = currentNode;
-            currentNode = currentNode.next;
-             }
-            currentNode.prev = currentNode;
-            currentNode.next = newNode;
-            result = true;
-            noOfEntries++;
-        }
-        else if (contains(anEntry)){
-            result = false;
-        }
-        return result;
+    Node newNode = new Node(anEntry);
+    currentNode = firstNode;
+    while (currentNode != null && anEntry.compareTo(currentNode.data) > 0) {
+      tempNode = currentNode;
+      currentNode = currentNode.next;
     }
 
+    if (isEmpty() || (tempNode == null)) { // CASE 1: add at beginning
+      newNode.next = firstNode;
+      firstNode = newNode;
+    } else {	// CASE 2: add in the middle or at the end, i.e. after nodeBefore
+      newNode.next = currentNode;
+      tempNode.next = newNode;
+    }
+    noOfEntries++;
+    result = true;
+    return result;
+    }
+    
+    @Override
+    public boolean hasDuplicateEntries() {
+    int index = 0;
+    currentNode = firstNode;
+    for (Node current = currentNode; current != null; current = current.next) {
+        //with each node in list, compare it to all element of list
+        int nodeIndex = 0;
+        for (Node node = currentNode; node != null; node = node.next) {
+            result = index != nodeIndex && node.data.compareTo(current.data) == 0;
+            if(result = true){
+                duplicateNode = currentNode;
+                remove(duplicateNode.data);
+            }
+            nodeIndex++;
+        }
+        index++;
+    }
+    return result;
+}
     @Override
     public boolean remove (T anEntry){
-        return true;
+    if(isEmpty()){
+        result = false; 
+    }else{ 
+        tempNode = null;
+        currentNode = firstNode;
+        
+        //search
+        while(currentNode !=  null &&  currentNode.data.compareTo(anEntry)<0){
+            tempNode = currentNode;
+            currentNode = currentNode.next;
+            
+        }
+        if (currentNode != null && currentNode.data.compareTo(anEntry)==0){
+            if(currentNode.data.compareTo(firstNode.data)==0){
+                firstNode = firstNode.next;
+            }
+            else{
+                tempNode = currentNode;
+                noOfEntries --;
+            return true;
+            }
+        }
+        result = false;
+        }
+    return result;
     }
+    
     @Override
     public void clear(){
+        currentNode = firstNode;
+        while(currentNode != null){
+        remove(currentNode.data);
+        currentNode.prev = currentNode;
+        currentNode = currentNode.next;
+        }
+        noOfEntries = 0;
     }
     
     @Override
@@ -62,7 +108,7 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
     
     @Override
     public int getNumberOfEntries(){
-        return 1;
+        return noOfEntries;
     }
 
     @Override
@@ -73,22 +119,25 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
     }
     
     @Override
-    public boolean replace (T anEntry){
-        return true;
-    }
-    
-    @Override
     public void retrieve (T anEntry){
-        
+        if(contains(anEntry)){
+            System.out.println(anEntry);
+        }
+        else {
+            System.out.println("Does not exists");
+        }
     }
     @Override
     public void generateReports(){
-        
     }
 
     @Override
-    public String toString() {
-        currentNode = firstNode;
+    public String toString() {       
+        if(isEmpty()){
+            System.out.println("\nEmpty");
+            noOfEntries = 0;
+        }
+        currentNode = firstNode; 
         while(currentNode != null){
             System.out.println(currentNode.data);
             currentNode.prev = currentNode;
