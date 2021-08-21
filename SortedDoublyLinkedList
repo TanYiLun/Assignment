@@ -4,22 +4,17 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
     private boolean binary = false;
     private boolean result = false;
     private Node firstNode, currentNode, tempNode;
-    private int noOfEntries =0,noOfDuplicates = 0;
+    private int noOfEntries =0;
     
     @Override
     public boolean add (T anEntry){
     Node newNode = new Node(anEntry);
     currentNode = firstNode;
-    while (currentNode != null && newNode.data.compareTo(currentNode.data) > 0) {
+    while (currentNode != null && anEntry.compareTo(currentNode.data) > 0) {
       tempNode = currentNode;
       currentNode = currentNode.next;
     }
-    while(currentNode != null && newNode.data.compareTo(currentNode.data)==0){
-      removeDuplicates(newNode.data);
-      System.out.println(noOfDuplicates);
-      noOfDuplicates++;
-    }
-    
+
     if (isEmpty() || (tempNode == null)) { // CASE 1: add at beginning
       newNode.next = firstNode;
       firstNode = newNode;
@@ -34,7 +29,6 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
     
     @Override
     public boolean hasDuplicateEntries() {
-    result = false;
     int index = 0;
     currentNode = firstNode;
     for (Node current = currentNode; current != null; current = current.next) {
@@ -69,47 +63,14 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
             else{
                 tempNode = currentNode;
                 noOfEntries --;
-                result = true;
+            return true;
             }
         }
-        } 
+        result = false;
+        }
     return result;
     }
     
-    @Override
-    public boolean removeDuplicates (T anEntry){
-    Node duplicate = new Node(anEntry);
-    result = false;
-    if(isEmpty()){
-        result = false; 
-    }else{ 
-        tempNode = null;
-        currentNode = firstNode;
-        
-        //search
-        while(currentNode !=  null &&  currentNode.data.compareTo(anEntry)<0){
-            tempNode = currentNode;
-            currentNode = currentNode.next;
-            
-        }
-        if (currentNode != null && currentNode.data.compareTo(duplicate.data)==0){
-            if(duplicate.data.compareTo(firstNode.data)==0){
-                firstNode = firstNode.next;
-            }
-            if(currentNode.data.compareTo(duplicate.data)==0){
-                currentNode = currentNode.next;
-                result = true;
-                noOfEntries--;
-            }
-        }
-        } 
-    return result;
-    }
-    
-    @Override
-    public boolean update(T anEntry){
-        return true;
-    }
     @Override
     public void clear(){
         currentNode = firstNode;
@@ -118,7 +79,6 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
         currentNode.prev = currentNode;
         currentNode = currentNode.next;
         }
-        noOfEntries = 0;
     }
     
     @Override
@@ -152,6 +112,7 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
      binary = (noOfEntries == 0);
     return binary;
     }
+
     
     @Override
     public void retrieve (T anEntry){
@@ -169,10 +130,6 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
 
     @Override
     public String toString() {
-        if(isEmpty()){
-            System.out.println("\nEmpty");
-            noOfEntries = 0;
-        }
         currentNode = firstNode;
         while(currentNode != null){
             System.out.println(currentNode.data);
