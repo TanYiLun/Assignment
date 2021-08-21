@@ -106,8 +106,9 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
     return result;
     }
     
-    public void update(){
-        
+    @Override
+    public boolean update(T anEntry){
+        return true;
     }
     @Override
     public void clear(){
