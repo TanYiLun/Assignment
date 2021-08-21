@@ -1,0 +1,225 @@
+package ADT;
+
+public class SortedDoublyLinkedList <T extends Comparable <T>> implements SortedListInterface<T>{
+    private boolean binary = false;
+    private boolean result = false;
+    private Node firstNode, currentNode, tempNode;
+    private int noOfEntries =0,noOfDuplicates = 0;
+    
+    @Override
+    public boolean add (T anEntry){
+    Node newNode = new Node(anEntry);
+    currentNode = firstNode;
+    while (currentNode != null && newNode.data.compareTo(currentNode.data) > 0) {
+      tempNode = currentNode;
+      currentNode = currentNode.next;
+    }
+//    if(currentNode != null && newNode.data.compareTo(currentNode.data)==0){
+//      update(newNode.data);
+//    }
+    
+    if (isEmpty() || (tempNode == null)) { // CASE 1: add at beginning
+      newNode.next = firstNode;
+      firstNode = newNode;
+    } else {	// CASE 2: add in the middle or at the end, i.e. after nodeBefore
+      newNode.next = currentNode;
+      tempNode.next = newNode;
+    }
+    removeDuplicates();
+    noOfEntries++;
+    result = true;
+    return result;
+    }
+    
+    @Override
+    public boolean hasDuplicateEntries() {
+    int index = 0;
+    currentNode = firstNode;
+    for (Node current = currentNode; current != null; current = current.next) {
+        //with each node in list, compare it to all element of list
+        int nodeIndex = 0;
+        for (Node node = currentNode; node != null; node = node.next) {
+            result = index != nodeIndex && node.data.compareTo(current.data) == 0;
+            nodeIndex++;
+        }
+        index++;
+    }
+    return result;
+}
+    @Override
+    public boolean remove (T anEntry){
+    if(isEmpty()){
+        result = false; 
+    }else{ 
+        tempNode = null;
+        currentNode = firstNode;
+        
+        //search
+        while(currentNode !=  null &&  currentNode.data.compareTo(anEntry)<0){
+            tempNode = currentNode;
+            currentNode = currentNode.next;
+            
+        }
+        if (currentNode != null && currentNode.data.compareTo(anEntry)==0){
+            if(currentNode.data.compareTo(firstNode.data)==0){
+                firstNode = firstNode.next;
+            }
+            else{
+                tempNode = currentNode;
+                noOfEntries --;
+                result = true;
+            }
+        }
+        } 
+    return result;
+    }
+    
+
+    public boolean removeDuplicates (){
+        currentNode = firstNode;
+        while(currentNode.next!=null){
+            if(currentNode.data.compareTo(currentNode.next.data)==0){
+                currentNode.next = currentNode.next.next;
+            }
+            else{
+                currentNode = currentNode.next;
+            }
+        }
+        return true;
+    }
+    
+    
+    @Override
+    public boolean update(T anEntry){
+        Node duplicate = new Node(anEntry);
+    result = false;
+    if(isEmpty()){
+        result = false; 
+    }else{ 
+        tempNode = null;
+        currentNode = firstNode;
+        
+        //search
+        while(currentNode !=  null &&  currentNode.data.compareTo(anEntry)<0){
+            tempNode = currentNode;
+            currentNode = currentNode.next;
+            
+        }
+        if (currentNode != null && currentNode.data.compareTo(duplicate.data)==0){
+            if(noOfEntries == 1 && duplicate.data.compareTo(firstNode.data)==0){
+                firstNode = duplicate.next;
+            }
+            else if(duplicate.data.compareTo(firstNode.data)==0){
+                firstNode = firstNode.next;
+            }
+            else if(currentNode.data.compareTo(duplicate.data)==0){
+                currentNode = duplicate.next;
+                result = true;
+            }
+            noOfEntries--;
+        }
+        } 
+    return result;
+    }
+    @Override
+    public void clear(){
+        currentNode = firstNode;
+        while(currentNode != null){
+        remove(currentNode.data);
+        currentNode.prev = currentNode;
+        currentNode = currentNode.next;
+        }
+        noOfEntries = 0;
+    }
+    
+    @Override
+    public boolean contains(T anEntry){
+        binary = false;
+        currentNode = firstNode;
+        do{
+          if(currentNode == null){
+             binary = false;
+         }
+          else if (anEntry.compareTo(currentNode.data) != 0) {
+             currentNode.prev = currentNode;
+             currentNode = currentNode.next;
+             binary = false;
+         }
+          else if (anEntry.compareTo(currentNode.data)==0) {
+              binary = true;
+          }
+        }while(binary != true && currentNode !=null);
+        return binary;
+    }
+    
+    @Override
+    public int getNumberOfEntries(){
+        return noOfEntries;
+    }
+
+    @Override
+    public boolean isEmpty(){
+     binary = false;
+     binary = (noOfEntries == 0);
+    return binary;
+    }
+    
+    @Override
+    public void retrieve (T anEntry){
+        if(contains(anEntry)){
+            System.out.println(anEntry);
+        }
+        else {
+            System.out.println("Does not exists");
+        }
+    }
+    @Override
+    public void generateReports(){
+        
+    }
+
+    @Override
+    public String toString() {
+        if(isEmpty()){
+            System.out.println("\nEmpty");
+            noOfEntries = 0;
+        }
+        currentNode = firstNode;
+        while(currentNode != null){
+            System.out.println(currentNode.data);
+            currentNode.prev = currentNode;
+            currentNode = currentNode.next;
+        }
+        return "SortedDoublyLinkedList{" + "noOfEntries=" + noOfEntries + '}';
+    }
+    
+
+    private class Node { //Inner class for doubly linked list
+    private T data;
+    private Node next;
+    private Node prev;
+    
+        Node(){
+          next = null;
+          prev = null;
+        }
+    
+        Node(T data){
+          this.data = data;
+          this.next = null;
+          this.next = null;
+        }
+    
+        Node(T data, Node next){
+          this.data = data;
+          this.next = next;
+          this.prev = null;
+        }
+        Node(T data, Node next, Node prev){
+          this.data = data;
+          this.next = next;
+          this.prev = prev;
+        }
+
+    }
+}
