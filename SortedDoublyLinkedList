@@ -3,18 +3,23 @@ package ADT;
 public class SortedDoublyLinkedList <T extends Comparable <T>> implements SortedListInterface<T>{
     private boolean binary = false;
     private boolean result = false;
-    private Node firstNode, currentNode, tempNode, duplicateNode;
-    private int noOfEntries =0;
+    private Node firstNode, currentNode, tempNode;
+    private int noOfEntries =0,noOfDuplicates = 0;
     
     @Override
     public boolean add (T anEntry){
     Node newNode = new Node(anEntry);
     currentNode = firstNode;
-    while (currentNode != null && anEntry.compareTo(currentNode.data) > 0) {
+    while (currentNode != null && newNode.data.compareTo(currentNode.data) > 0) {
       tempNode = currentNode;
       currentNode = currentNode.next;
     }
-
+    while(currentNode != null && newNode.data.compareTo(currentNode.data)==0){
+      remove(currentNode.data);
+      System.out.println(noOfDuplicates);
+      noOfDuplicates++;
+    }
+    
     if (isEmpty() || (tempNode == null)) { // CASE 1: add at beginning
       newNode.next = firstNode;
       firstNode = newNode;
@@ -29,6 +34,7 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
     
     @Override
     public boolean hasDuplicateEntries() {
+    result = false;
     int index = 0;
     currentNode = firstNode;
     for (Node current = currentNode; current != null; current = current.next) {
@@ -36,10 +42,6 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
         int nodeIndex = 0;
         for (Node node = currentNode; node != null; node = node.next) {
             result = index != nodeIndex && node.data.compareTo(current.data) == 0;
-            if(result = true){
-                duplicateNode = currentNode;
-                remove(duplicateNode.data);
-            }
             nodeIndex++;
         }
         index++;
@@ -67,10 +69,32 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
             else{
                 tempNode = currentNode;
                 noOfEntries --;
-            return true;
+                return true;
             }
         }
         result = false;
+        } 
+    return result;
+    }
+    
+    @Override
+    public boolean removeDuplicates (){
+        /*Another reference to head*/
+        currentNode = firstNode;
+ 
+        /* Traverse list till the last node */
+        while (currentNode != null) {
+             Node temp = currentNode;
+            /*Compare current node with the next node and
+            keep on deleting them until it matches the current
+            node data */
+            while(temp!=null && temp.data==currentNode.data) {
+                temp = temp.next;
+            }
+            /*Set current node next to the next different
+            element denoted by temp*/
+            currentNode.next = temp;
+            currentNode = currentNode.next;
         }
     return result;
     }
@@ -129,15 +153,16 @@ public class SortedDoublyLinkedList <T extends Comparable <T>> implements Sorted
     }
     @Override
     public void generateReports(){
+        
     }
 
     @Override
-    public String toString() {       
+    public String toString() {
         if(isEmpty()){
             System.out.println("\nEmpty");
             noOfEntries = 0;
         }
-        currentNode = firstNode; 
+        currentNode = firstNode;
         while(currentNode != null){
             System.out.println(currentNode.data);
             currentNode.prev = currentNode;
