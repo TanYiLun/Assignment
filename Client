@@ -1,0 +1,164 @@
+package Client;
+import ADT.SortedDoublyLinkedList;
+import ADT.SortedListInterface;
+import EntityClass.*;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+public class Client  {
+    public static void main(String[] args) {    
+//      Members testMember1 = new Members("a",66);
+//      Members testMember2 = new Members("b",668);
+//      Members testMember3 = new Members("c",948);
+//      Members testMember4 = new Members("c",9488);
+//      Members testMember5 = new Members("e",691);
+//      SortedListInterface <Members> test = new SortedDoublyLinkedList();
+//      test.add(testMember1);
+//      test.add(testMember2);
+//      test.add(testMember3);
+//      test.add(testMember4);
+//      test.add(testMember5);
+////      System.out.println(test.hasDuplicateEntries());
+////      System.out.print(test);
+////      test.clear();
+////      System.out.println(test);
+//        test.generateReports();
+
+    String existingMember, newMember, answer, generateReport;
+    String name, phoneNo, address, email, dob;
+    int id =1, day, month, year, i =0, currentYear, age, existingID, decision;
+    SortedListInterface <Members> memberList = new SortedDoublyLinkedList <>();
+    ArrayList <Members> member = new ArrayList <>();
+    
+    Scanner input = new Scanner(System.in);
+    
+    System.out.println("=================Welcome to DaiBiq Karaoke Members Maintainance System===============");
+    System.out.println("1.Check number of members\n2.Add Member\n3.Remove Member\n4.Check Member Details\n5.Update Member Details\n6.Clear member database");
+    decision = input.nextInt();
+    if(decision == 1){
+        memberList.getNumberOfEntries();
+    }
+    do{
+    do{
+        System.out.println("Hi, Is the customer already a member of DaiBiq Karaoke ? (Y/N)");
+        existingMember = input.nextLine();
+        switch (existingMember.toUpperCase()) {
+            case "Y" -> {
+                try{
+                System.out.println("Please login!");
+                System.out.println("Enter the ID number");
+                existingID = input.nextInt();
+                input.nextLine();
+                if(memberList.contains(member.get(existingID))){
+                    System.out.println("ID verified! Welcome!");
+                }
+                }catch(Exception E){
+                    System.out.println("Sorry,ID does not exists!");
+                }
+            }
+            case "N" -> {
+                do{
+                    System.out.println("Do you want to add a member at DaiBiq Karaoke ? (Y/N)");
+                    newMember = input.nextLine();
+                    switch (newMember.toUpperCase()) {
+                        case "Y" -> {
+                            do{
+                            member.add(new Members()); 
+                            System.out.println("Lets Start by Registering!");
+                            System.out.println("Enter name : ");
+                            name = input.nextLine();
+                            member.get(i).setName(name);
+                            
+                            System.out.println("Enter E-mail address : ");
+                            email = input.nextLine();
+                            member.get(i).setEmail(email);
+                            
+                            System.out.println("Enter Phone Number : ");
+                            phoneNo = input.nextLine();
+                            member.get(i).setPhoneNo(phoneNo);
+                            
+                            System.out.print("Enter address : ");
+                            address = input.nextLine();
+                            member.get(i).setAddress(address);
+                            
+                            System.out.println("Enter Date of Birth: (6/9/2021)");
+                            try{
+                            System.out.println("Day : ");
+                            day = input.nextInt();
+                            
+                            System.out.println("Month :");
+                            month = input.nextInt();
+                            
+                            System.out.println("Year : ");
+                            year = input.nextInt();
+                            
+                            currentYear = Calendar.getInstance().get(Calendar.YEAR);
+                            age = currentYear - year;
+                            member.get(i).setAge(age);
+                           
+                            dob = (day + "/" + month + "/" + year);
+                            member.get(i).setDob(dob);
+                            
+                            member.get(i).setId(id);
+                            System.out.println("The ID is " + id);
+                            System.out.println("Age : " + age);
+                            
+                            }catch (Exception E){
+                                System.out.println("An error has occured");
+                            }
+                            do{
+                            System.out.println("Do you want to edit any details ? (Y/N)");
+                            input.nextLine();
+                            answer = input.nextLine();
+                                switch (answer.toUpperCase()) {
+                                    case "N" -> {
+                                        System.out.println("Register Complete!");
+                                        memberList.add(member.get(i));
+                                        System.out.println("==============Member Details=============");
+                                        memberList.retrieve(member.get(i));
+                                        id++;
+                                        i++;
+                                    }
+                                    case "Y" -> System.out.println("Please enter the details again\n");
+                                    default -> System.out.println("Invalid Input! Please try again!");
+                                }
+                            }while(!"Y".equals(answer.toUpperCase()) && !"N".equals(answer.toUpperCase()));
+                            }while(answer.toUpperCase().equals("Y"));
+                        }
+                        case "N" -> System.out.println("Thank You! Have a nice day!");
+                        default -> System.out.println("Invalid Input! Please Try Again !");
+                    }
+                }while(!"Y".equals(newMember.toUpperCase()) && !"N".equals(newMember.toUpperCase()));
+            }
+            default -> System.out.println("Invalid Input! Please Try Again !");
+        }
+    }while(!"Y".equals(existingMember.toUpperCase()) && !"N".equals(existingMember.toUpperCase()));
+    
+    do{
+    System.out.println("Do you want to continue to add members ? (Y/N)");
+    answer = input.nextLine();
+    if("N".equals(answer.toUpperCase())){
+        
+        do{
+        System.out.println("Do you want to generate a report ? (Y/N)");
+        generateReport = input.nextLine();
+        if("Y".equals(generateReport.toUpperCase())){
+            memberList.generateReports();
+        }
+        else if (!"Y".equals(answer.toUpperCase()) && !"N".equals(answer.toUpperCase())){
+            System.out.println("Invalid Input! Please try again!");
+        }
+        }while(!"Y".equals(generateReport.toUpperCase()) && !"N".equals(generateReport.toUpperCase()));
+        System.out.println("Thank You! Have a nice day");
+        
+    }
+    else if (!"Y".equals(answer.toUpperCase()) && !"N".equals(answer.toUpperCase())){
+        System.out.println("Invalid Input! Please try again!");
+    }
+    }while(!"Y".equals(answer.toUpperCase()) && !"N".equals(answer.toUpperCase()));
+    
+    }while("Y".equals(answer.toUpperCase()));
+    }
+
+}
